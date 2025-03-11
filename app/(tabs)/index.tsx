@@ -1,6 +1,15 @@
-import { View, Text, ScrollView, StyleSheet, Pressable, Image } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  Pressable,
+  Image,
+} from 'react-native';
 import { router } from 'expo-router';
 import Animated, { FadeInUp, FadeInDown } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
+import MaskedView from '@react-native-masked-view/masked-view';
 
 const featuredCourses = [
   {
@@ -30,28 +39,88 @@ const statistics = [
 export default function HomeScreen() {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {/* Header Section */}
-      <Animated.View entering={FadeInDown.delay(200).duration(1000)} style={styles.header}>
-        <View style={styles.welcomeContainer}>
-          <Text style={styles.welcomeText}>Welcome to the</Text>
-          <Text style={styles.appName}>EDUMATE!</Text>
-        </View>
+      {/* Logo and Branding */}
+      <View style={styles.logoContainer}>
         <Image
-          source={{ uri: 'https://images.unsplash.com/photo-1595376742185-4e6f7e95b3f7?w=500' }}
-          style={styles.headerImage}
+          source={require('../../assets/index/logo.png')}
+          style={styles.logo}
+        />
+
+        <MaskedView
+          maskElement={<Text style={styles.brandName}>DOLEWRITE</Text>}
+        >
+          <LinearGradient
+            colors={['#FF512F', '#DD2476']} // Adjust gradient colors
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.gradient}
+          />
+        </MaskedView>
+      </View>
+
+      {/* Welcome Section */}
+      <Animated.View
+        entering={FadeInDown.delay(200).duration(1000)}
+        style={styles.header}
+      >
+        <Text style={styles.welcomeText}>
+          Welcome to the{' '}
+          <MaskedView
+            maskElement={<Text style={styles.gradientText}>Dolewrite</Text>}
+          >
+            <LinearGradient
+              colors={['#F8AD30', '#EE3425']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+            >
+              <Text style={[styles.gradientText, { opacity: 0 }]}>
+                Dolewrite !
+              </Text>
+            </LinearGradient>
+          </MaskedView>
+        </Text>
+        <Text style={styles.description}>
+          Dolewrite is your ultimate learning companion. Explore our courses and
+          enhance your knowledge.
+        </Text>
+        <Pressable style={styles.startButton} onPress={() => router.push('/')}>
+          <Text style={styles.buttonText}>Explore Courses</Text>
+        </Pressable>
+
+        {/* Additional Paragraphs */}
+        <View style={styles.extraTextContainer}>
+          <Text style={styles.extraText}>
+            Learn from top educators and become an expert in your field.
+          </Text>
+          <Text style={styles.extraText}>
+            Join thousands of students on a journey of knowledge.
+          </Text>
+        </View>
+
+        {/* Super Kid Image */}
+        <Image
+          source={require('../../assets/index/super-kid.png')}
+          style={styles.superKidImage}
         />
       </Animated.View>
 
       {/* Featured Courses */}
-      <Animated.View entering={FadeInUp.delay(400).duration(1000)} style={styles.section}>
+      <Animated.View
+        entering={FadeInUp.delay(400).duration(1000)}
+        style={styles.section}
+      >
         <Text style={styles.sectionTitle}>Featured Courses</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {featuredCourses.map((course) => (
             <Pressable
               key={course.id}
               style={styles.courseCard}
-              onPress={() => router.push('/classes')}>
-              <Image source={{ uri: course.image }} style={styles.courseImage} />
+              onPress={() => router.push('/classes')}
+            >
+              <Image
+                source={{ uri: course.image }}
+                style={styles.courseImage}
+              />
               <View style={styles.courseInfo}>
                 <Text style={styles.courseName}>{course.name}</Text>
                 <Text style={styles.teacherName}>{course.teacher}</Text>
@@ -64,24 +133,6 @@ export default function HomeScreen() {
           ))}
         </ScrollView>
       </Animated.View>
-
-      {/* Statistics */}
-      <Animated.View entering={FadeInUp.delay(600).duration(1000)} style={styles.statsContainer}>
-        {statistics.map((stat) => (
-          <View key={stat.id} style={styles.statItem}>
-            <Text style={styles.statValue}>{stat.value}</Text>
-            <Text style={styles.statLabel}>{stat.label}</Text>
-          </View>
-        ))}
-      </Animated.View>
-
-      {/* About Section */}
-      <Animated.View entering={FadeInUp.delay(800).duration(1000)} style={styles.aboutSection}>
-        <Text style={styles.aboutTitle}>About Us</Text>
-        <Text style={styles.aboutText}>
-          We provide high-quality education through our innovative learning platform. Our expert teachers ensure that every student receives personalized attention and guidance.
-        </Text>
-      </Animated.View>
     </ScrollView>
   );
 }
@@ -91,30 +142,73 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#ffffff',
   },
+  logoContainer: {
+    flexDirection: 'row', 
+    alignItems: 'center', 
+  },
+  logo: {
+    width: 50,  
+    height: 50, 
+    marginRight: 10, 
+  },
+  brandName: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  gradient: {
+    flex: 1,
+    height: 40, 
+  },
   header: {
+    alignItems: 'center',
     padding: 20,
-    paddingTop: 60,
     backgroundColor: '#FFF5EE',
   },
-  welcomeContainer: {
-    marginBottom: 20,
-  },
   welcomeText: {
-    fontFamily: 'Poppins-Regular',
-    fontSize: 16,
-    color: '#666666',
-  },
-  appName: {
+    fontSize: 24,
     fontFamily: 'Poppins-Bold',
-    fontSize: 32,
-    color: '#FF6B35',
-    marginTop: 4,
+    color: '#333333',
+    textAlign: 'center',
   },
-  headerImage: {
-    width: '100%',
-    height: 200,
-    borderRadius: 20,
-    marginTop: 20,
+  gradientText: {
+    fontSize: 24,
+    fontFamily: 'Poppins-Bold',
+  },
+  description: {
+    fontSize: 16,
+    fontFamily: 'Poppins-Regular',
+    color: '#F97316',
+    textAlign: 'center',
+    marginVertical: 10,
+  },
+  startButton: {
+    backgroundColor: '#FF6B35',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontFamily: 'Poppins-SemiBold',
+    color: '#ffffff',
+  },
+  extraTextContainer: {
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  extraText: {
+    fontSize: 14,
+    fontFamily: 'Poppins-Regular',
+    color: '#666666',
+    textAlign: 'center',
+    marginTop: 5,
+  },
+  superKidImage: {
+    width: 150,
+    height: 150,
+    marginTop: 15,
   },
   section: {
     padding: 20,
@@ -169,43 +263,5 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     fontSize: 14,
     color: '#666666',
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 20,
-    backgroundColor: '#FFF5EE',
-    marginHorizontal: 20,
-    borderRadius: 16,
-  },
-  statItem: {
-    alignItems: 'center',
-  },
-  statValue: {
-    fontFamily: 'Poppins-Bold',
-    fontSize: 24,
-    color: '#FF6B35',
-  },
-  statLabel: {
-    fontFamily: 'Poppins-Regular',
-    fontSize: 14,
-    color: '#666666',
-    marginTop: 4,
-  },
-  aboutSection: {
-    padding: 20,
-    marginTop: 20,
-  },
-  aboutTitle: {
-    fontFamily: 'Poppins-SemiBold',
-    fontSize: 20,
-    color: '#333333',
-    marginBottom: 12,
-  },
-  aboutText: {
-    fontFamily: 'Poppins-Regular',
-    fontSize: 16,
-    color: '#666666',
-    lineHeight: 24,
   },
 });
